@@ -4,9 +4,10 @@ rbuild
 What is rbuild?
 ----
 
-The basic idea is to provide a tool that can:
+The basic idea is to provide a tool that can process geometry and 
+rasters into other geometry and rasters very quickly. In particular:
 
-- generate rasters from source geometry, add overviews
+- generate rasters from source geometry, with appropriate overviews/compression for normal use
 - optionally perform raster transformations using gdalcalc
 - optionally convert the resulting raster into polygons, add overviews, add to a database etc.
 - be used very easily and extremely quickly (vs. standard GDAL/PostGIS)
@@ -31,12 +32,13 @@ http://elogeo.nottingham.ac.uk/xmlui/handle/url/254
 Quick setup
 ----
 
-./checksetup.sh       tells you if you have the necessary software installed.
-./rbuild -h           provides a description of the program's parameters and behaviour
+    ./checksetup.sh       tells you if you have the necessary software installed.
+
+    ./rbuild -h           provides a description of the program's parameters and behaviour
 
 To get started, please take a look at: 
 
-   http://github.com/gbb/rbuild_demo
+     http://github.com/gbb/rbuild_demo
 
 This is a complete example project which walks you through 4 different uses of rbuild.
                    
@@ -49,24 +51,27 @@ Version numbers are indicated below.
 
 Generating geometry based rasters:
 
-GDAL (1.10.0) : gdal_rasterize, gdal_merge.py, gdaladdo
-Gnu Parallel (20130222 or later)
+- GDAL (1.10.0) : gdal_rasterize, gdal_merge.py, gdaladdo
+- Gnu Parallel (20130222 or later)
 
 Generating new calculated rasters:
 
-python (2.7.3 or later. 3.x series is untested)
-numpy  (1.7.1 or later)
-gbb_gdal_calc (available on github)
+- python (2.7.3 or later. 3.x series is untested)
+- numpy  (1.7.1 or later)
+- gbb_gdal_calc (available on github, included in this distribution)
 
 Adding to database:
 
-Postgis with postgis raster (2.0 or later, installed in the system, and installed on a database).
-Postgresql (9.0 or later, 9.2 or later is ideal)
+- Postgis with postgis raster (2.0 or later, installed in the system, and installed on a database).
+- Postgresql (9.0 or later, 9.2 or later is ideal)
 
 Polygonization: 
 
-Dan's GDAL scripts / GDAL. I've found Dan's implementation of gdal_trace_outline to be considerably faster and more 
-predictable (in terms of runtime) than gdal_polygonize.sh. It also seems more to offer more flexibility.
+- Dan's GDAL scripts / GDAL. 
+
+I've found Dan's implementation of gdal_trace_outline to be considerably 
+faster and more predictable (in terms of runtime) than 
+gdal_polygonize.sh. It also seems more to offer more flexibility.
 
 
 How to use the program:
@@ -114,15 +119,17 @@ See Appendix 1 for more information.
 
 Step 3. Go into the the rbuild directory. 
 
-  # cd rbuild
+    # cd rbuild
 
 Step 4. Check the buildfile refers to the correct vector layers that you want to work with, the correct resolution and coverage.  
 e.g.
-  # cp bf/default.bf bf/projects/my_project.bf
-  # nano bf/projects/my_project.bf
+
+    # cp bf/default.bf bf/projects/my_project.bf
+    # nano bf/projects/my_project.bf
 
 Step 5. Build!
-#    ./rbuild -f bf/projects/my_project.bf -n "my_example"      <--- call it whatever you like, e.g. testrun, april15, ... 
+    # ./rbuild -f bf/projects/my_project.bf -n "my_example"      
+      (call it whatever you like, e.g. testrun, april15, ... )
 
 The output will be placed in the folder output/my_example/final  , in this example. 
 
@@ -134,8 +141,8 @@ Please pre-transform your geometry into the target SRID before rendering it with
 
 Here's how, using psql:
 
-  $ select data1, data2, ST_Transform(geom,25833) as geom into mytable_25833 from mytable;
-  $ create index my_table_25833_index on mytable_25833 using gist(geom);
+    $ select data1, data2, ST_Transform(geom,25833) as geom into mytable_25833 from mytable;
+    $ create index my_table_25833_index on mytable_25833 using gist(geom);
 
 
 Q. Why doesn't rbuild do the reprojection automatically? 
@@ -165,7 +172,7 @@ Notes
 
 A. What's going on? Where the heck do I start?
 
-http://github.com/gbb/rbuild_demo
+    http://github.com/gbb/rbuild_demo
 
 B. Any rules for database/column/build names?
 
@@ -182,7 +189,7 @@ D. How do I tidy up all the tables I've made by running tests?
 
 Copy/paste this, optionally with 'CASCADE'
 
-# // select 'drop table rbuild_rasts.' || tablename || ' cascade;' from pg_tables where schemaname='rbuild_rasts'
+    # // select 'drop table rbuild_rasts.' || tablename || ' cascade;' from pg_tables where schemaname='rbuild_rasts'
 
 E. The last piece of debug output is sometimes missing in debug mode. 
 
