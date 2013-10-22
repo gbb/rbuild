@@ -138,7 +138,7 @@ The output will be placed in the folder output/my_example/final  , in this examp
 
 
 Appendix 1.
- ======
+======
 
 Please pre-transform your geometry into the target SRID before rendering it with this program.
 
