@@ -38,7 +38,7 @@ Quick setup
 
 To get started, please take a look at: 
 
-     http://github.com/gbb/rbuild_demo
+http://github.com/gbb/rbuild_demo
 
 This is a complete example project which walks you through 4 different uses of rbuild.
                    
@@ -69,9 +69,18 @@ Polygonization:
 
 - Dan's GDAL scripts / GDAL. 
 
+General:
+
+- Gnu Date
+
 I've found Dan's implementation of gdal_trace_outline to be considerably 
 faster and more predictable (in terms of runtime) than 
 gdal_polygonize.sh. It also seems more to offer more flexibility.
+
+*Important note for MacOS users!* 
+
+GNU Date is not the same as 'date' in macos -> use Macports: 'port install coreutils'.
+You may need to manually add GNU Parallel:  http://ftp.gnu.org/gnu/parallel/   or use MacPorts.
 
 
 How to use the program:
@@ -88,13 +97,7 @@ It's a really good idea to look at this: https://github.com/gbb/rbuild_demo
 1. Installing  dependencies
 -----
 
-Dependencies: GDAL (current), Gnu Parallel, Perl, Gnu Date, PostGIS (for DB insertion), 'Dan's GDAL scripts'.
-
-*Important note for MacOS users!* 
-
-GNU Date is not the same as 'date' in macos -> use Macports: 'port install coreutils'.
-You may need to manually add GNU Parallel:  http://ftp.gnu.org/gnu/parallel/   or use MacPorts.
-
+As above.
 
 2. Setting up a buildfile
 ----
