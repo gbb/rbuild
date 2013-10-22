@@ -137,7 +137,7 @@ Step 5. Build!
 The output will be placed in the folder output/my_example/final  , in this example. 
 
 
-Appendix 1.
+Appendix 1: Geometry setup
 ======
 
 Please pre-transform your geometry into the target SRID before rendering it with this program.
@@ -147,16 +147,19 @@ Here's how, using psql:
     $ select data1, data2, ST_Transform(geom,25833) as geom into mytable_25833 from mytable;
     $ create index my_table_25833_index on mytable_25833 using gist(geom);
 
+Appendix 2: Notes and FAQ
+===
 
-Q. Why doesn't rbuild do the reprojection automatically? 
-----
+Q. What's going on? Where the heck do I start?
+
+    http://github.com/gbb/rbuild_demo
+
+Q. Why doesn't rbuild do geometry reprojection for me? 
 
 - Because I don't want to fill your database with temporary data.
 - Because probably you will be re-using this geometry more than once; it makes sense to do the slow transform only once.
 
-
 Q. Why does the program not automatically transform the source geometry on the fly into the target SRID? 
------
 
 - The run time of the program becomes highly unpredictable; projections take different times; you may have several source geometry tables in different SRIDS.
 
@@ -169,31 +172,23 @@ The result is that you cannot be certain about what will be burned in a given bo
 
 - Slow, complex and unpredictable is bad.
 
-
-Notes
------
-
-A. What's going on? Where the heck do I start?
-
-    http://github.com/gbb/rbuild_demo
-
-B. Any rules for database/column/build names?
+Q. Any rules for database/column/build names?
 
 It's a bad idea to call your build name something with a hyphen - if you're adding the data to postgresql later, the 
 hyphen will cause problems. Use _ instead of -. Similarly, try to keep data column names short in case you want to make a 
 shapefile.
 
-C. I'm getting the error "ERROR:  column not found in geometry_columns table"
+Q. I'm getting the error "ERROR:  column not found in geometry_columns table"
 
 Don't worry about this. This is because the software attempts to drop any existing tables with the given name, before adding the new table. 
 This is normal output for that use of raster2pgsql and shp2pgsql.
 
-D. How do I tidy up all the tables I've made by running tests?
+Q. How do I tidy up all the tables I've made by running tests?
 
 Copy/paste this, optionally with 'CASCADE'
 
     # // select 'drop table rbuild_rasts.' || tablename || ' cascade;' from pg_tables where schemaname='rbuild_rasts'
 
-E. The last piece of debug output is sometimes missing in debug mode. 
+Q. The last piece of debug output is sometimes missing in debug mode. 
 
 Take a look in $WORK_DIR/output if this happens. I'll try to add a patch soon to fix this behaviour.
