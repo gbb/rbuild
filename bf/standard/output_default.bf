@@ -13,6 +13,7 @@ STORAGE_DIR=$RBUILD_HOME/output
 
 	
 # Details for database storage of output. Make sure db exists and has permissions set correctly.
+# Set to dummy values if you are not using this feature e.g. 'dummy'.
 
 OPTIONAL_OUTPUT_DB_HOST=''
 OUTPUT_DB_DBNAME=''

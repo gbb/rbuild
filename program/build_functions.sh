@@ -405,7 +405,7 @@ function POSTGIS_RASTER_IMPORT {
   # needs: -l matching overview levels above. 
 
   JSON_SQL_ESCAPE_QUOTE=$(echo -e $JSON | sed "s/'/''/g")
-  echo -e "COMMENT ON TABLE $OUTPUT_GEOMETRY_SCHEMA.$BUILD_NAME IS '$JSON_SQL_ESCAPE_QUOTE';" 2>> $WORK_DIR/output | psql -h "$OPTIONAL_OUTPUT_DB_HOST" -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME"  >> $WORK_DIR/output 2>&1
+  echo -e "COMMENT ON TABLE $OUTPUT_RASTER_SCHEMA.$BUILD_NAME IS '$JSON_SQL_ESCAPE_QUOTE';" 2>> $WORK_DIR/output | psql -h "$OPTIONAL_OUTPUT_DB_HOST" -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME"  >> $WORK_DIR/output 2>&1
 
   debug_program_output
 
