@@ -5,7 +5,7 @@
 
 # Standard flags
 
-	POLYGONIZE_FLAGS="-classify -out-cs en -split-polys -dp-toler 0 -ogr-fmt 'ESRI Shapefile' -ogr-out "
+	POLYGONIZE_FLAGS="-classify -out-cs en -split-polys -dp-toler 0 -bevel-size 0.01 -ogr-fmt 'ESRI Shapefile' -ogr-out "
 
 	#### Important flags. 
 	# -classify -> identify each area, not just a single polygon of all areas with data.
