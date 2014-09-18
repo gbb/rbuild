@@ -90,7 +90,7 @@ function RASTERIZE {
  	    # Also, more importantly - on-the-fly st_transform would not have a spatial index in the target coordinate system.
             # A spatial index is essential for lightning fast bounding-box matches that let us quickly retrieve only what we need.
 
-	    SQL="-sql \"select $BURN_FIELD,$GEOMETRY_COLUMN from $TABLE_NAME where st_intersects(st_transform($GEOMETRY_COLUMN,$SRID), $BOUNDING_BOX) \""   
+	    SQL="-sql \"select $BURN_FIELD,st_transform($GEOMETRY_COLUMN,$SRID) from $TABLE_NAME where st_intersects(st_transform($GEOMETRY_COLUMN,$SRID), $BOUNDING_BOX) \""   
 
             # n.b. we have to use \" here since sql can contain ' characters           
 
