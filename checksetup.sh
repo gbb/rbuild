@@ -23,6 +23,7 @@ for i in "${DEPS[@]}";  do
   if ! (which $i >/dev/null) ; then
     echo -n 'FAILED!' $i ': SOFTWARE MISSING!' 
     please_install
+    exit
   else
     echo -n 'OK! ' $i ' - found at: '
     echo $(which $i)
