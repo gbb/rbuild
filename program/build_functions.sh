@@ -390,12 +390,14 @@ function POSTGIS_RASTER_IMPORT {
   # unhelpfully, postgis raster uses a completely different overview system to gdal. http://lists.osgeo.org/pipermail/postgis-devel/2010-December/010827.html
   # TODO: save output dev/nulled below to a file or variable and debug_echo it.  
 
+  if [[ "$OPTIONAL_OUTPUT_DB_HOST" == "" ]; then OUTPUT_DB_HOST="-h $OPTIONAL_OUTPUT_DB_HOST"; fi
+
   if [[ "$OUTPUT_AS_TILES" = "NO" ]] ; then
-    # add final merged raster from the output directory
-    raster2pgsql -I -s "$SRID" -d -t 100x100 -M -C -r -Y "$OUTPUT_DIR/$BUILD_NAME.tif" "$OUTPUT_RASTER_SCHEMA.$BUILD_NAME" 2>> $WORK_DIR/output | psql -h "$OPTIONAL_OUTPUT_DB_HOST" -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME" >> $WORK_DIR/output 2>&1
+    # add final merged raster from the output directory   
+    raster2pgsql -I -s "$SRID" -d -t 100x100 -M -C -r -Y "$OUTPUT_DIR/$BUILD_NAME.tif" "$OUTPUT_RASTER_SCHEMA.$BUILD_NAME" 2>> $WORK_DIR/output | psql $OUTPUT_DB_HOST -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME" >> $WORK_DIR/output 2>&1
   else   
     # add raster output tiles from the working directory. note, no quotes around the wildcard below, deliberately.
-    raster2pgsql -I -s "$SRID" -d -t 100x100 -M -C -r -Y $WORK_DIR/MERGED_RULES*.tif "$OUTPUT_RASTER_SCHEMA.$BUILD_NAME" 2>> $WORK_DIR/output | psql -h "$OPTIONAL_OUTPUT_DB_HOST" -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME" >> $WORK_DIR/output 2>&1
+    raster2pgsql -I -s "$SRID" -d -t 100x100 -M -C -r -Y $WORK_DIR/MERGED_RULES*.tif "$OUTPUT_RASTER_SCHEMA.$BUILD_NAME" 2>> $WORK_DIR/output | psql $OUTPUT_DB_HOST -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME" >> $WORK_DIR/output 2>&1
   fi 
 
   # -l $PGR_OVERVIEWS disabled until working version of raster2pgsql overviews released (next version). 
@@ -410,7 +412,7 @@ function POSTGIS_RASTER_IMPORT {
   # needs: -l matching overview levels above. 
 
   JSON_SQL_ESCAPE_QUOTE=$(echo -e $JSON | sed "s/'/''/g")
-  echo -e "COMMENT ON TABLE $OUTPUT_RASTER_SCHEMA.$BUILD_NAME IS '$JSON_SQL_ESCAPE_QUOTE';" 2>> $WORK_DIR/output | psql -h "$OPTIONAL_OUTPUT_DB_HOST" -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME"  >> $WORK_DIR/output 2>&1
+  echo -e "COMMENT ON TABLE $OUTPUT_RASTER_SCHEMA.$BUILD_NAME IS '$JSON_SQL_ESCAPE_QUOTE';" 2>> $WORK_DIR/output | psql $OUTPUT_DB_HOST -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME"  >> $WORK_DIR/output 2>&1
 
   debug_program_output
 
@@ -434,15 +436,17 @@ function POSTGIS_GEOMETRY_IMPORT {
 
   # Note that this command works for either tiled polygon sets or large polygons. 
 
+  if [[ "$OPTIONAL_OUTPUT_DB_HOST" == "" ]; then OUTPUT_DB_HOST="-h $OPTIONAL_OUTPUT_DB_HOST"; fi
+
   if [[ "$OUTPUT_AS_TILES" = "NO" ]] ; then
     # add final big shapefile from the output directory
-    shp2pgsql -I -S -D -d -s "$SRID" "$OUTPUT_DIR/$BUILD_NAME.$POLYGONIZE_SUFFIX" "$OUTPUT_GEOMETRY_SCHEMA.$BUILD_NAME" 2>> $WORK_DIR/output | psql -h "$OPTIONAL_OUTPUT_DB_HOST" -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME" >> $WORK_DIR/output 2>&1 
+    shp2pgsql -I -S -D -d -s "$SRID" "$OUTPUT_DIR/$BUILD_NAME.$POLYGONIZE_SUFFIX" "$OUTPUT_GEOMETRY_SCHEMA.$BUILD_NAME" 2>> $WORK_DIR/output | psql $OUTPUT_DB_HOST -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME" >> $WORK_DIR/output 2>&1 
   else   
     # add small tile shapefiles generated earlier. prep table then add. unlike raster2pgsql, shp2pgsql can only add one shape at a time. 
     FIRST_FILE=$(ls $OUTPUT_DIR/shapefile_tiles/*.$POLYGONIZE_SUFFIX | head -1)
-    shp2pgsql -p -I -S -D -s "$SRID" $FIRST_FILE "$OUTPUT_GEOMETRY_SCHEMA.$BUILD_NAME" 2>> $WORK_DIR/output | psql -h "$OPTIONAL_OUTPUT_DB_HOST" -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME"  >> $WORK_DIR/output 2>&1
+    shp2pgsql -p -I -S -D -s "$SRID" $FIRST_FILE "$OUTPUT_GEOMETRY_SCHEMA.$BUILD_NAME" 2>> $WORK_DIR/output | psql $OUTPUT_DB_HOST -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME"  >> $WORK_DIR/output 2>&1
     for i in $(ls $OUTPUT_DIR/shapefile_tiles/*.$POLYGONIZE_SUFFIX); do
-      echo shp2pgsql -a  -S -D -s "$SRID" $i "$OUTPUT_GEOMETRY_SCHEMA.$BUILD_NAME" \| psql -h "$OPTIONAL_OUTPUT_DB_HOST" -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME" >> $WORK_DIR/tasks
+      echo shp2pgsql -a  -S -D -s "$SRID" $i "$OUTPUT_GEOMETRY_SCHEMA.$BUILD_NAME" \| psql $OUTPUT_DB_HOST -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME" >> $WORK_DIR/tasks
     done
     run_tasks
   fi 
@@ -457,7 +461,7 @@ function POSTGIS_GEOMETRY_IMPORT {
   # also, ogr2ogr can be used as an alternative.
 
   JSON_SQL_ESCAPE_QUOTE=$(echo $JSON | sed "s/'/''/g")
-  echo -e "COMMENT ON TABLE $OUTPUT_GEOMETRY_SCHEMA.$BUILD_NAME IS '$JSON_SQL_ESCAPE_QUOTE';" | psql -h "$OPTIONAL_OUTPUT_DB_HOST" -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME"  >> $WORK_DIR/output 2>&1
+  echo -e "COMMENT ON TABLE $OUTPUT_GEOMETRY_SCHEMA.$BUILD_NAME IS '$JSON_SQL_ESCAPE_QUOTE';" | psql $OUTPUT_DB_HOST -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME"  >> $WORK_DIR/output 2>&1
 
   debug_program_output
 
