@@ -9,7 +9,7 @@
 . $BUILDFILE_DIR/standard/performance_fast.bf
 
 # Maximum number of threads to run with Gnu Parallel. 8-12 is fast. 1-2 is polite.
-MAX_THREADS=12
+MAX_THREADS=16
 
 # Compressor: DEFLATE, LZW, or PACKBITS
 WORKING_COMPRESSOR=PACKBITS
