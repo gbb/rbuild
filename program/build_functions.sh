@@ -390,7 +390,7 @@ function POSTGIS_RASTER_IMPORT {
   # unhelpfully, postgis raster uses a completely different overview system to gdal. http://lists.osgeo.org/pipermail/postgis-devel/2010-December/010827.html
   # TODO: save output dev/nulled below to a file or variable and debug_echo it.  
 
-  if [[ "$OPTIONAL_OUTPUT_DB_HOST" == "" ]; then OUTPUT_DB_HOST="-h $OPTIONAL_OUTPUT_DB_HOST"; fi
+  if [[ "$OPTIONAL_OUTPUT_DB_HOST" == "" ]]; then OUTPUT_DB_HOST="-h $OPTIONAL_OUTPUT_DB_HOST"; fi
 
   if [[ "$OUTPUT_AS_TILES" = "NO" ]] ; then
     # add final merged raster from the output directory   
@@ -436,7 +436,7 @@ function POSTGIS_GEOMETRY_IMPORT {
 
   # Note that this command works for either tiled polygon sets or large polygons. 
 
-  if [[ "$OPTIONAL_OUTPUT_DB_HOST" == "" ]; then OUTPUT_DB_HOST="-h $OPTIONAL_OUTPUT_DB_HOST"; fi
+  if [[ "$OPTIONAL_OUTPUT_DB_HOST" == "" ]]; then OUTPUT_DB_HOST="-h $OPTIONAL_OUTPUT_DB_HOST"; fi
 
   if [[ "$OUTPUT_AS_TILES" = "NO" ]] ; then
     # add final big shapefile from the output directory
