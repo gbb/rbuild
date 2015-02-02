@@ -436,6 +436,8 @@ function POSTGIS_GEOMETRY_IMPORT {
 
   # Note that this command works for either tiled polygon sets or large polygons. 
 
+  rm -f $WORK_DIR/tasks
+
   if [[ "$OPTIONAL_OUTPUT_DB_HOST" == "" ]]; then OUTPUT_DB_HOST="-h $OPTIONAL_OUTPUT_DB_HOST"; fi
 
   if [[ "$OUTPUT_AS_TILES" = "NO" ]] ; then
