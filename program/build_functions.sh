@@ -442,7 +442,7 @@ function POSTGIS_GEOMETRY_IMPORT {
     FIRST_FILE=$(ls $OUTPUT_DIR/shapefile_tiles/*.$POLYGONIZE_SUFFIX | head -1)
     shp2pgsql -p -I -S -D -s "$SRID" $FIRST_FILE "$OUTPUT_GEOMETRY_SCHEMA.$BUILD_NAME" 2>> $WORK_DIR/output | psql -h "$OPTIONAL_OUTPUT_DB_HOST" -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME"  >> $WORK_DIR/output 2>&1
     for i in $(ls $OUTPUT_DIR/shapefile_tiles/*.$POLYGONIZE_SUFFIX); do
-      echo shp2pgsql -a  -S -D -s "$SRID" $i "$OUTPUT_GEOMETRY_SCHEMA.$BUILD_NAME" | psql -h "$OPTIONAL_OUTPUT_DB_HOST" -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME" >> $WORK_DIR/tasks
+      echo shp2pgsql -a  -S -D -s "$SRID" $i "$OUTPUT_GEOMETRY_SCHEMA.$BUILD_NAME" \| psql -h "$OPTIONAL_OUTPUT_DB_HOST" -d "$OUTPUT_DB_DBNAME" -U "$OUTPUT_DB_USERNAME" >> $WORK_DIR/tasks
     done
     run_tasks
   fi 
