@@ -46,12 +46,12 @@ This is a complete example project which walks you through 4 different uses of r
 Dependencies
 ----
 
-The program makes use of the following software: please make sure you have it installed.
+The program makes use of the following software: you'll need to have it installed before you start.
 Version numbers are indicated below.
 
 Generating geometry based rasters:
 
-- GDAL (1.10.0) : gdal_rasterize, gdal_merge.py, gdaladdo
+- GDAL (1.10.0 or later) : gdal_rasterize, gdal_merge.py, gdaladdo
 - Gnu Parallel (20130222 or later)
 
 Generating new calculated rasters:
@@ -63,19 +63,18 @@ Generating new calculated rasters:
 Adding to database:
 
 - Postgis with postgis raster (2.0 or later, installed in the system, and installed on a database).
-- Postgresql (9.0 or later, 9.2 or later is ideal)
+- Postgresql (9.0 or later, 9.3 or later is ideal)
 
 Polygonization: 
 
-- Dan's GDAL scripts / GDAL. 
+- Dans GDAL scripts / GDAL.   (*Warning: there seems to be a bug in the stable version 2015/02/01. Has been reported*).
 
 General:
 
 - Gnu Date
 
-I've found Dan's implementation of gdal_trace_outline to be considerably 
-faster and more predictable (in terms of runtime) than 
-gdal_polygonize.sh. It also seems more to offer more flexibility.
+(I've found Dan's implementation of gdal_trace_outline to be considerably faster and more predictable (in terms of runtime) than 
+gdal_polygonize.sh. It also seems more to offer more flexibility. You can adjust the code to use gdal_polygonize.py if you prefer)
 
 *Important note for MacOS users!* 
 
@@ -109,6 +108,7 @@ Rbuild will follow the instructions in the buildfile and run the appropriate sta
 
 
 3. Setting up geometry
+----
 
 You can use 'psql' and SQL commands to convert the geometry to the target coordinate system. This is a good idea. You will 
 probably render this geometry more than once. It's important to ensure it's indexed in the target coordinate system since 
